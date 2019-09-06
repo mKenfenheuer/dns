@@ -45,48 +45,129 @@ namespace DNS.Server {
             entries.Add(entry);
         }
 
+        public void Remove(IResourceRecord entry)
+        {
+            entries.Remove(entry);
+        }
+
+        public void RemoveAll(IEnumerable<IResourceRecord> entries)
+        {
+            foreach(IResourceRecord resourceRecord in entries)
+                if(this.entries.Contains(resourceRecord))
+                    this.entries.Remove(resourceRecord);
+        }
+
+        public void RemoveIPAddressResourceRecord(string domain, string ip)
+        {
+            RemoveIPAddressResourceRecord(new Domain(domain), IPAddress.Parse(ip));
+        }
+
         public void AddIPAddressResourceRecord(string domain, string ip) {
             AddIPAddressResourceRecord(new Domain(domain), IPAddress.Parse(ip));
+        }
+
+        public void RemoveIPAddressResourceRecord(Domain domain, IPAddress ip)
+        {
+            Remove(new IPAddressResourceRecord(domain, ip, ttl));
         }
 
         public void AddIPAddressResourceRecord(Domain domain, IPAddress ip) {
             Add(new IPAddressResourceRecord(domain, ip, ttl));
         }
 
-        public void AddNameServerResourceRecord(string domain, string nsDomain) {
+        public void AddNameServerResourceRecord(string domain, string nsDomain)
+        {
             AddNameServerResourceRecord(new Domain(domain), new Domain(nsDomain));
         }
 
-        public void AddNameServerResourceRecord(Domain domain, Domain nsDomain) {
+        public void AddNameServerResourceRecord(Domain domain, Domain nsDomain)
+        {
             Add(new NameServerResourceRecord(domain, nsDomain, ttl));
         }
 
-        public void AddCanonicalNameResourceRecord(string domain, string cname) {
+        public void AddCanonicalNameResourceRecord(string domain, string cname)
+        {
             AddCanonicalNameResourceRecord(new Domain(domain), new Domain(cname));
         }
 
-        public void AddCanonicalNameResourceRecord(Domain domain, Domain cname) {
+        public void AddCanonicalNameResourceRecord(Domain domain, Domain cname)
+        {
             Add(new CanonicalNameResourceRecord(domain, cname, ttl));
         }
 
-        public void AddPointerResourceRecord(string ip, string pointer) {
+        public void AddPointerResourceRecord(string ip, string pointer)
+        {
             AddPointerResourceRecord(IPAddress.Parse(ip), new Domain(pointer));
         }
 
-        public void AddPointerResourceRecord(IPAddress ip, Domain pointer) {
+        public void AddPointerResourceRecord(IPAddress ip, Domain pointer)
+        {
             Add(new PointerResourceRecord(ip, pointer, ttl));
         }
 
-        public void AddMailExchangeResourceRecord(string domain, int preference, string exchange) {
+        public void AddMailExchangeResourceRecord(string domain, int preference, string exchange)
+        {
             AddMailExchangeResourceRecord(new Domain(domain), preference, new Domain(exchange));
         }
 
-        public void AddMailExchangeResourceRecord(Domain domain, int preference, Domain exchange) {
+        public void AddMailExchangeResourceRecord(Domain domain, int preference, Domain exchange)
+        {
             Add(new MailExchangeResourceRecord(domain, preference, exchange));
         }
 
-        public void AddTextResourceRecord(string domain, string attributeName, string attributeValue) {
+        public void AddTextResourceRecord(string domain, string attributeName, string attributeValue)
+        {
             Add(new TextResourceRecord(new Domain(domain), attributeName, attributeValue, ttl));
+        }
+
+        public void RemoveNameServerResourceRecord(string domain, string nsDomain)
+        {
+            RemoveNameServerResourceRecord(new Domain(domain), new Domain(nsDomain));
+        }
+
+        public void RemoveNameServerResourceRecord(Domain domain, Domain nsDomain)
+        {
+            Remove(new NameServerResourceRecord(domain, nsDomain, ttl));
+        }
+
+        public void RemoveCanonicalNameResourceRecord(string domain, string cname)
+        {
+            RemoveCanonicalNameResourceRecord(new Domain(domain), new Domain(cname));
+        }
+
+        public void RemoveCanonicalNameResourceRecord(Domain domain, Domain cname)
+        {
+            Remove(new CanonicalNameResourceRecord(domain, cname, ttl));
+        }
+
+        public void RemovePointerResourceRecord(string ip, string pointer)
+        {
+            RemovePointerResourceRecord(IPAddress.Parse(ip), new Domain(pointer));
+        }
+
+        public void RemovePointerResourceRecord(IPAddress ip, Domain pointer)
+        {
+            Remove(new PointerResourceRecord(ip, pointer, ttl));
+        }
+
+        public void RemoveMailExchangeResourceRecord(string domain, int preference, string exchange)
+        {
+            RemoveMailExchangeResourceRecord(new Domain(domain), preference, new Domain(exchange));
+        }
+
+        public void RemoveMailExchangeResourceRecord(Domain domain, int preference, Domain exchange)
+        {
+            Remove(new MailExchangeResourceRecord(domain, preference, exchange));
+        }
+
+        public void RemoveTextResourceRecord(string domain, string attributeName, string attributeValue)
+        {
+            Remove(new TextResourceRecord(new Domain(domain), attributeName, attributeValue, ttl));
+        }
+
+        public void ClearRecords()
+        {
+            entries.Clear();
         }
 
         public Task<IResponse> Resolve(IRequest request, CancellationToken cancellationToken = default(CancellationToken)) {

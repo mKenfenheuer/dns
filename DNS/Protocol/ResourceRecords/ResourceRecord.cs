@@ -107,6 +107,24 @@ namespace DNS.Protocol.ResourceRecords {
                 .ToString();
         }
 
+        public override bool Equals(object obj)
+        {
+            var record = obj as ResourceRecord;
+            return record != null &&
+                   EqualityComparer<Domain>.Default.Equals(domain, record.domain) &&
+                   type == record.type &&
+                   klass == record.klass &&
+                   ttl.Equals(record.ttl) &&
+                   EqualityComparer<byte[]>.Default.Equals(data, record.data) &&
+                   EqualityComparer<Domain>.Default.Equals(Name, record.Name) &&
+                   Type == record.Type &&
+                   Class == record.Class &&
+                   TimeToLive.Equals(record.TimeToLive) &&
+                   DataLength == record.DataLength &&
+                   EqualityComparer<byte[]>.Default.Equals(Data, record.Data) &&
+                   Size == record.Size;
+        }
+
         [Marshalling.Endian(Marshalling.Endianness.Big)]
         [StructLayout(LayoutKind.Sequential, Pack = 2)]
         private struct Tail {
@@ -137,5 +155,7 @@ namespace DNS.Protocol.ResourceRecords {
                 set { dataLength = (ushort) value; }
             }
         }
+
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using DNS.Protocol.Utils;
 
 namespace DNS.Protocol.ResourceRecords {
@@ -37,6 +38,19 @@ namespace DNS.Protocol.ResourceRecords {
             get { return record.Size; }
         }
 
+        public override bool Equals(object obj)
+        {
+            var record = obj as BaseResourceRecord;
+            return record != null &&
+                   EqualityComparer<Domain>.Default.Equals(Name, record.Name) &&
+                   Type == record.Type &&
+                   Class == record.Class &&
+                   TimeToLive.Equals(record.TimeToLive) &&
+                   DataLength == record.DataLength &&
+                   EqualityComparer<byte[]>.Default.Equals(Data, record.Data) &&
+                   Size == record.Size;
+        }
+
         public byte[] ToArray() {
             return record.ToArray();
         }
@@ -45,5 +59,7 @@ namespace DNS.Protocol.ResourceRecords {
             return ObjectStringifier.New(this)
                 .Add("Name", "Type", "Class", "TimeToLive", "DataLength");
         }
+
+
     }
 }

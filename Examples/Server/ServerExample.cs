@@ -13,6 +13,8 @@ namespace Examples.Server {
             MasterFile masterFile = new MasterFile();
             DnsServer server = new DnsServer(masterFile, "8.8.8.8");
 
+            masterFile.remo
+
             foreach(string domain in args) {
                 Console.WriteLine("Redirecting {0} to localhost", domain);
                 masterFile.AddIPAddressResourceRecord(domain, "127.0.0.1");
